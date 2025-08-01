@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AssetsInMapper">
+
+    <sql id="Base_Column_List">
+        id,assets_id,num,staff_id,date,comment,status
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.AssetsIn">
+        select
+        assets_in.*, assets.name as assetsName, assets.no as assetsNo, staff.name as staffName
+        from assets_in
+        left join assets on assets_in.assets_id = assets.id
+        left join staff on assets_in.staff_id = staff.id
+        <where>
+            <if test="staffId != null"> and assets_in.staff_id = #{staffId}</if>
+            <if test="assetsName != null"> and assets.name like concat('%', #{assetsName}, '%')</if>
+        </where>
+        order by assets_in.id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.AssetsIn">
+        select
+        <include refid="Base_Column_List" />
+        from assets_in
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from assets_in
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.AssetsIn" useGeneratedKeys="true" keyProperty="id">
+        insert into assets_in
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="assetsId != null">assets_id,</if>
+            <if test="num != null">num,</if>
+            <if test="staffId != null">staff_id,</if>
+            <if test="date != null">date,</if>
+            <if test="comment != null">comment,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="assetsId != null">#{assetsId},</if>
+            <if test="num != null">#{num},</if>
+            <if test="staffId != null">#{staffId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.AssetsIn">
+        update assets_in
+        <set>
+            <if test="assetsId != null">
+                assets_id = #{assetsId},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

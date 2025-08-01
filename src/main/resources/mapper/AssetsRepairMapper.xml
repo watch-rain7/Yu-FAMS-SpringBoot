@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AssetsRepairMapper">
+
+    <sql id="Base_Column_List">
+        id,receive_id,status,reason,date,staff_id
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.AssetsRepair">
+        select
+        ar.*, a.name as assetsName, a.no as assetsCode, s.name as staffName
+        from assets_repair ar
+        left join assets a on ar.assets_id = a.id
+        left join staff s on ar.staff_id = s.id
+        <where>
+            <if test="assetsName != null">
+                AND a.name LIKE CONCAT('%', #{assetsName}, '%')
+            </if>
+            <if test="staffId != null"> and ar.staff_id = #{staffId}</if>
+            <if test="status != null"> and ar.status = #{status}</if>
+        </where>
+        order by ar.id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.AssetsRepair">
+        select
+        ar.*, a.name as assetsName, a.no as assetsCode, s.name as staffName
+        from assets_repair ar
+        left join assets a on ar.assets_id = a.id
+        left join staff s on ar.staff_id = s.id
+        where ar.id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from assets_repair
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.AssetsRepair" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO assets_repair(
+            assets_id, assets_name, assets_code, receive_id, status, reason, fault_desc,
+            repair_result, complete_time, date, staff_id
+        ) VALUES (
+                     #{assetsId}, #{assetsName}, #{assetsCode}, #{receiveId}, #{status}, #{reason}, #{faultDesc},
+                     #{repairResult}, #{completeTime}, #{date}, #{staffId}
+                 )
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.AssetsRepair">
+        update assets_repair
+        <set>
+            <if test="assetsId != null">
+                assets_id = #{assetsId},
+            </if>
+            <if test="assetsName != null">
+                assets_name = #{assetsName},
+            </if>
+            <if test="assetsCode != null">
+                assets_code = #{assetsCode},
+            </if>
+            <if test="receiveId != null">
+                receive_id = #{receiveId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="faultDesc != null">
+                fault_desc = #{faultDesc},
+            </if>
+            <if test="repairResult != null">
+                repair_result = #{repairResult},
+            </if>
+            <if test="completeTime != null">
+                complete_time = #{completeTime},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectInProcessRepair" resultType="com.example.entity.AssetsRepair">
+        SELECT *
+        FROM assets_repair
+        WHERE receive_id = #{receiveId}
+          AND (status = '处理中' OR status = '维修中')
+            LIMIT 1
+    </select>
+
+    <select id="selectRecent" resultType="com.example.entity.AssetsRepair">
+        SELECT ar.*, a.name AS assetsName, a.no AS assetsCode, s.name AS staffName
+        FROM assets_repair ar
+                 LEFT JOIN assets a ON ar.assets_id = a.id
+                 LEFT JOIN staff s ON ar.staff_id = s.id
+        ORDER BY ar.date DESC
+            LIMIT #{limit}
+    </select>
+
+    <select id="selectAssetByReceiveId" resultType="com.example.entity.AssetsRepair">
+        SELECT a.id AS assetsId, a.name AS assetsName, a.no AS assetsCode
+        FROM assets_receive ar
+                 LEFT JOIN assets a ON ar.assets_id = a.id
+        WHERE ar.id = #{receiveId}
+    </select>
+
+</mapper>

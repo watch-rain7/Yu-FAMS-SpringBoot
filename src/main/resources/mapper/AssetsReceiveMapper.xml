@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AssetsReceiveMapper">
+
+    <sql id="Base_Column_List">
+        id,assets_id,staff_id,date,comment,return_date,status,return_status
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.AssetsReceive">
+        select
+        assets_receive.*, assets.name as assetsName, assets.no as assetsNo, staff.name as staffName
+        from assets_receive
+        left join assets on assets_receive.assets_id = assets.id
+        left join staff on assets_receive.staff_id = staff.id
+        <where>
+            <if test="staffId != null"> and assets_receive.staff_id = #{staffId}</if>
+            <if test="assetsName != null">and assets.name like concat('%', #{assetsName}, '%')</if>
+            <if test="status!= null"> and assets_receive.status = #{status}</if>
+            <if test="returnStatus!= null"> and assets_receive.return_status = #{returnStatus}</if>
+        </where>
+        order by assets_receive.id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.AssetsReceive">
+        select
+        <include refid="Base_Column_List" />
+        from assets_receive
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from assets_receive
+        where  id = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.AssetsReceive" useGeneratedKeys="true" keyProperty="id">
+        insert into assets_receive
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="assetsId != null">assets_id,</if>
+            <if test="staffId != null">staff_id,</if>
+            <if test="date != null">date,</if>
+            <if test="comment != null">comment,</if>
+            <if test="returnDate != null">return_date,</if>
+            <if test="status != null">status,</if>
+            <if test="returnStatus != null">return_status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="assetsId != null">#{assetsId},</if>
+            <if test="staffId != null">#{staffId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="comment != null">#{comment},</if>
+            <if test="returnDate != null">#{returnDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="returnStatus != null">#{returnStatus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.AssetsReceive">
+        update assets_receive
+        <set>
+            <if test="assetsId != null">
+                assets_id = #{assetsId},
+            </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            <if test="returnDate != null">
+                return_date = #{returnDate},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="returnStatus != null">
+                return_status = #{returnStatus},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
