@@ -1,32 +1,31 @@
-package com.example.mapper;
+package com.example.service;
 
 import com.example.entity.Inventory;
-import org.apache.ibatis.annotations.Mapper;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
-@Mapper
-public interface InventoryMapper {
+public interface InventoryService {
 
     /**
      * 新增
      */
-    int insert(Inventory inventory);
+    void add(Inventory inventory);
 
     /**
      * 删除
      */
-    int deleteById(Integer id);
+    void deleteById(Integer id);
 
     /**
      * 批量删除
      */
-    int deleteBatch(List<Integer> ids);
+    void deleteBatch(List<Integer> ids);
 
     /**
      * 修改
      */
-    int updateById(Inventory inventory);
+    void updateById(Inventory inventory);
 
     /**
      * 根据ID查询
@@ -41,10 +40,10 @@ public interface InventoryMapper {
     /**
      * 分页查询
      */
-    List<Inventory> selectPage(Inventory inventory, Integer pageNum, Integer pageSize);
+    PageInfo<Inventory> selectPage(Inventory inventory, Integer pageNum, Integer pageSize);
 
     /**
      * 查询最近的盘点记录
      */
-    List<Inventory> selectRecent(Integer limit);
-}
+    List<Inventory> getRecentInventory(Integer limit);
+} 

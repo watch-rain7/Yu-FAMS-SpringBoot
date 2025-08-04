@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DashboardMapper {
@@ -19,7 +20,7 @@ public interface DashboardMapper {
             "(SELECT COALESCE(SUM(current_value), 0) FROM assets) AS totalValue, " +
             "(SELECT COUNT(*) FROM inventory WHERE inventory_time >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AS inventoryCount, " +
             "(SELECT COUNT(*) FROM inventory WHERE result = '正常') AS normalInventory, " +
-            "(SELECT COUNT(*) FROM inventory WHERE result = '异常') AS abnormalInventory, " +
+            "(SELECT COUNT(*) FROM inventory WHERE result != '正常') AS abnormalInventory, " +
             "0 AS assetGrowthRate, " +
             "0 AS repairDecreaseRate, " +
             "0 AS valueGrowthRate, " +
@@ -37,7 +38,7 @@ public interface DashboardMapper {
             "WHERE date >= DATE_SUB(NOW(), INTERVAL 30 DAY) " +
             "GROUP BY DATE_FORMAT(date, '%Y-%m-%d') " +
             "ORDER BY date")
-    List<Object> getRepairStats();
+    List<Map<String, Object>> getRepairStats();
 
     @Select("SELECT " +
             "DATE_FORMAT(inventory_time, '%Y-%m') AS month, " +
@@ -46,5 +47,5 @@ public interface DashboardMapper {
             "WHERE inventory_time >= DATE_SUB(NOW(), INTERVAL 6 MONTH) " +
             "GROUP BY DATE_FORMAT(inventory_time, '%Y-%m') " +
             "ORDER BY month")
-    InventoryTrend getInventoryTrend();
+    List<Map<String, Object>> getInventoryTrend();
 }

@@ -5,38 +5,37 @@
 <mapper namespace="com.example.mapper.InventoryMapper">
 
     <sql id="Base_Column_List">
-        id, code, inventory_time, result, asset_id, operator_id, create_time
+        id, assets_id, assets_name, assets_no, inventory_time, staff_id, staff_name, 
+        result, status, location, comment, create_time, update_time
     </sql>
 
     <select id="selectAll" resultType="com.example.entity.Inventory">
         select
-        i.*, a.name as assetName, a.no as assetCode, s.name as operatorName
+        i.id, i.assets_id, i.inventory_time, i.staff_id, i.result, i.status, i.location, i.comment, 
+        i.create_time, i.update_time,
+        a.name as assetsName, a.no as assetsNo, s.name as staffName
         from inventory i
-        left join assets a on i.asset_id = a.id
-        left join staff s on i.operator_id = s.id
+        left join assets a on i.assets_id = a.id
+        left join staff s on i.staff_id = s.id
         <where>
-            <if test="code != null">
-                AND i.code LIKE CONCAT('%', #{code}, '%')
+            <if test="assetsName != null and assetsName != ''">
+                AND a.name LIKE CONCAT('%', #{assetsName}, '%')
             </if>
-            <if test="result != null">
-                AND i.result = #{result}
-            </if>
-            <if test="assetId != null">
-                AND i.asset_id = #{assetId}
-            </if>
-            <if test="operatorId != null">
-                AND i.operator_id = #{operatorId}
-            </if>
+            <if test="staffId != null"> and i.staff_id = #{staffId}</if>
+            <if test="status != null and status != ''"> and i.status = #{status}</if>
+            <if test="result != null and result != ''"> and i.result = #{result}</if>
         </where>
         order by i.id desc
     </select>
 
     <select id="selectById" resultType="com.example.entity.Inventory">
         select
-        i.*, a.name as assetName, a.no as assetCode, s.name as operatorName
+        i.id, i.assets_id, i.inventory_time, i.staff_id, i.result, i.status, i.location, i.comment, 
+        i.create_time, i.update_time,
+        a.name as assetsName, a.no as assetsNo, s.name as staffName
         from inventory i
-        left join assets a on i.asset_id = a.id
-        left join staff s on i.operator_id = s.id
+        left join assets a on i.assets_id = a.id
+        left join staff s on i.staff_id = s.id
         where i.id = #{id}
     </select>
 
@@ -45,46 +44,84 @@
         where id = #{id}
     </delete>
 
+    <delete id="deleteBatch">
+        delete from inventory
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
     <insert id="insert" parameterType="com.example.entity.Inventory" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO inventory(
-            code, inventory_time, result, asset_id, operator_id, create_time
+            assets_id, inventory_time, staff_id, staff_name,
+            result, status, location, comment, create_time, update_time
         ) VALUES (
-                     #{code}, #{inventoryTime}, #{result}, #{assetId}, #{operatorId}, #{createTime}
-                 )
+            #{assetsId}, #{inventoryTime}, #{staffId}, #{staffName},
+            #{result}, #{status}, #{location}, #{comment}, NOW(), NOW()
+        )
     </insert>
 
     <update id="updateById" parameterType="com.example.entity.Inventory">
         update inventory
         <set>
-            <if test="code != null">
-                code = #{code},
+            <if test="assetsId != null">
+                assets_id = #{assetsId},
             </if>
             <if test="inventoryTime != null">
                 inventory_time = #{inventoryTime},
             </if>
+            <if test="staffId != null">
+                staff_id = #{staffId},
+            </if>
+            <if test="staffName != null">
+                staff_name = #{staffName},
+            </if>
             <if test="result != null">
                 result = #{result},
             </if>
-            <if test="assetId != null">
-                asset_id = #{assetId},
+            <if test="status != null">
+                status = #{status},
             </if>
-            <if test="operatorId != null">
-                operator_id = #{operatorId},
+            <if test="location != null">
+                location = #{location},
             </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            update_time = NOW()
         </set>
         where id = #{id}
     </update>
 
-    <select id="selectStats" resultType="com.example.entity.Inventory">
-        SELECT 
-            DATE_FORMAT(inventory_time, '%Y-%m') as month,
-            COUNT(*) as count,
-            SUM(CASE WHEN result = '正常' THEN 1 ELSE 0 END) as normalCount,
-            SUM(CASE WHEN result = '异常' THEN 1 ELSE 0 END) as abnormalCount
-        FROM inventory 
-        WHERE inventory_time >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)
-        GROUP BY DATE_FORMAT(inventory_time, '%Y-%m')
-        ORDER BY month DESC
+    <select id="selectPage" resultType="com.example.entity.Inventory">
+        select
+        i.id, i.assets_id, i.inventory_time, i.staff_id, i.result, i.status, i.location, i.comment, 
+        i.create_time, i.update_time,
+        a.name as assetsName, a.no as assetsNo, s.name as staffName
+        from inventory i
+        left join assets a on i.assets_id = a.id
+        left join staff s on i.staff_id = s.id
+        <where>
+            <if test="assetsName != null and assetsName != ''">
+                AND a.name LIKE CONCAT('%', #{assetsName}, '%')
+            </if>
+            <if test="staffId != null"> and i.staff_id = #{staffId}</if>
+            <if test="status != null and status != ''"> and i.status = #{status}</if>
+            <if test="result != null and result != ''"> and i.result = #{result}</if>
+        </where>
+        order by i.id desc
+    </select>
+
+    <select id="selectRecent" resultType="com.example.entity.Inventory">
+        SELECT i.id, i.assets_id, i.inventory_time, i.staff_id, i.result, i.status, i.location, i.comment, 
+               i.create_time, i.update_time,
+               a.name AS assetsName, a.no AS assetsNo, s.name AS staffName
+        FROM inventory i
+                 LEFT JOIN assets a ON i.assets_id = a.id
+                 LEFT JOIN staff s ON i.staff_id = s.id
+        ORDER BY i.inventory_time DESC
+            LIMIT #{limit}
     </select>
 
 </mapper> 

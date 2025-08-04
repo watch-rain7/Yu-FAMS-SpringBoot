@@ -1,23 +1,52 @@
 package com.example.entity;
 
-import java.util.Date;
+import cn.hutool.core.annotation.Alias;
+
+import java.math.BigDecimal;
 
 /**
- * 资产盘点
-*/
+ * 资产盘点信息
+ */
 public class Inventory {
-    private Integer id;                   // ID
-    private String code;                  // 盘点编号
-    private Date inventoryTime;           // 盘点时间
-    private String result;                // 盘点结果
-    private Integer assetId;              // 资产ID
-    private Integer operatorId;           // 操作人ID
-    private Date createTime;              // 创建时间
-    
-    // 关联字段
-    private String assetName;             // 资产名称
-    private String assetCode;             // 资产编号
-    private String operatorName;          // 操作人姓名
+    /** ID */
+    @Alias("ID")
+    private Integer id;
+    /** 资产ID */
+    @Alias("资产ID")
+    private Integer assetsId;
+    /** 资产名称 */
+    @Alias("资产名称")
+    private String assetsName;
+    /** 资产编号 */
+    @Alias("资产编号")
+    private String assetsNo;
+    /** 盘点时间 */
+    @Alias("盘点时间")
+    private String inventoryTime;
+    /** 盘点人ID */
+    @Alias("盘点人ID")
+    private Integer staffId;
+    /** 盘点人姓名 */
+    @Alias("盘点人姓名")
+    private String staffName;
+    /** 盘点结果 */
+    @Alias("盘点结果")
+    private String result; // 正常、异常、丢失
+    /** 盘点状态 */
+    @Alias("盘点状态")
+    private String status; // 待盘点、已盘点、已确认
+    /** 盘点位置 */
+    @Alias("盘点位置")
+    private String location;
+    /** 备注 */
+    @Alias("备注")
+    private String comment;
+    /** 创建时间 */
+    @Alias("创建时间")
+    private String createTime;
+    /** 更新时间 */
+    @Alias("更新时间")
+    private String updateTime;
 
     public Integer getId() {
         return id;
@@ -27,20 +56,52 @@ public class Inventory {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public Integer getAssetsId() {
+        return assetsId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setAssetsId(Integer assetsId) {
+        this.assetsId = assetsId;
     }
 
-    public Date getInventoryTime() {
+    public String getAssetsName() {
+        return assetsName;
+    }
+
+    public void setAssetsName(String assetsName) {
+        this.assetsName = assetsName;
+    }
+
+    public String getAssetsNo() {
+        return assetsNo;
+    }
+
+    public void setAssetsNo(String assetsNo) {
+        this.assetsNo = assetsNo;
+    }
+
+    public String getInventoryTime() {
         return inventoryTime;
     }
 
-    public void setInventoryTime(Date inventoryTime) {
+    public void setInventoryTime(String inventoryTime) {
         this.inventoryTime = inventoryTime;
+    }
+
+    public Integer getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(Integer staffId) {
+        this.staffId = staffId;
+    }
+
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
     }
 
     public String getResult() {
@@ -51,51 +112,43 @@ public class Inventory {
         this.result = result;
     }
 
-    public Integer getAssetId() {
-        return assetId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setAssetId(Integer assetId) {
-        this.assetId = assetId;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Integer getOperatorId() {
-        return operatorId;
+    public String getLocation() {
+        return location;
     }
 
-    public void setOperatorId(Integer operatorId) {
-        this.operatorId = operatorId;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public Date getCreateTime() {
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public String getAssetName() {
-        return assetName;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setAssetName(String assetName) {
-        this.assetName = assetName;
-    }
-
-    public String getAssetCode() {
-        return assetCode;
-    }
-
-    public void setAssetCode(String assetCode) {
-        this.assetCode = assetCode;
-    }
-
-    public String getOperatorName() {
-        return operatorName;
-    }
-
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 }

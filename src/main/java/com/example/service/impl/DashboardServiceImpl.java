@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class DashboardServiceImpl implements DashboardService {
@@ -31,7 +32,7 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public RepairStats getRepairStats() {
-        List<Object> statsList = dashboardMapper.getRepairStats();
+        List<Map<String, Object>> statsList = dashboardMapper.getRepairStats();
         RepairStats result = new RepairStats();
         
         if (statsList != null && !statsList.isEmpty()) {
@@ -39,11 +40,20 @@ public class DashboardServiceImpl implements DashboardService {
             List<Integer> repairCounts = new ArrayList<>();
             List<Integer> completedCounts = new ArrayList<>();
             
-            // 这里需要根据实际返回的数据结构进行处理
-            // 暂时返回空数据，避免前端报错
+            for (Map<String, Object> item : statsList) {
+                labels.add((String) item.get("date"));
+                repairCounts.add(((Number) item.get("repairCount")).intValue());
+                completedCounts.add(((Number) item.get("completedCount")).intValue());
+            }
+            
             result.setLabels(labels);
             result.setRepairCounts(repairCounts);
             result.setCompletedCounts(completedCounts);
+        } else {
+            // 如果没有数据，返回空列表避免前端报错
+            result.setLabels(new ArrayList<>());
+            result.setRepairCounts(new ArrayList<>());
+            result.setCompletedCounts(new ArrayList<>());
         }
         
         return result;
@@ -51,6 +61,26 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     public InventoryTrend getInventoryTrend() {
-        return dashboardMapper.getInventoryTrend();
+        List<Map<String, Object>> trendList = dashboardMapper.getInventoryTrend();
+        InventoryTrend result = new InventoryTrend();
+        
+        if (trendList != null && !trendList.isEmpty()) {
+            List<String> labels = new ArrayList<>();
+            List<Integer> values = new ArrayList<>();
+            
+            for (Map<String, Object> item : trendList) {
+                labels.add((String) item.get("month"));
+                values.add(((Number) item.get("count")).intValue());
+            }
+            
+            result.setLabels(labels);
+            result.setValues(values);
+        } else {
+            // 如果没有数据，返回空列表避免前端报错
+            result.setLabels(new ArrayList<>());
+            result.setValues(new ArrayList<>());
+        }
+        
+        return result;
     }
 }
