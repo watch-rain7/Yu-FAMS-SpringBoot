@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AssetsTransferMapper">
+
+    <sql id="Base_Column_List">
+        id, assets_id, assets_name, assets_no, transfer_time, transfer_staff_id, transfer_staff_name,
+        from_staff_id, from_staff_name, from_department_id, from_department_name,
+        to_staff_id, to_staff_name, to_department_id, to_department_name,
+        reason, status, approver_id, approver_name, approve_time, approve_comment, comment,
+        create_time, update_time
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.AssetsTransfer">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_transfer
+        <where>
+            <if test="assetsName != null and assetsName != ''">
+                AND assets_name LIKE CONCAT('%', #{assetsName}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="transferStaffId != null">
+                AND transfer_staff_id = #{transferStaffId}
+            </if>
+            <if test="fromStaffId != null">
+                AND from_staff_id = #{fromStaffId}
+            </if>
+            <if test="toStaffId != null">
+                AND to_staff_id = #{toStaffId}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.AssetsTransfer">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_transfer
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from assets_transfer
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from assets_transfer
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.AssetsTransfer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO assets_transfer(
+            assets_id, assets_name, assets_no, transfer_time, transfer_staff_id, transfer_staff_name,
+            from_staff_id, from_staff_name, from_department_id, from_department_name,
+            to_staff_id, to_staff_name, to_department_id, to_department_name,
+            reason, status, comment, create_time, update_time
+        ) VALUES (
+            #{assetsId}, #{assetsName}, #{assetsNo}, #{transferTime}, #{transferStaffId}, #{transferStaffName},
+            #{fromStaffId}, #{fromStaffName}, #{fromDepartmentId}, #{fromDepartmentName},
+            #{toStaffId}, #{toStaffName}, #{toDepartmentId}, #{toDepartmentName},
+            #{reason}, #{status}, #{comment}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.AssetsTransfer">
+        update assets_transfer
+        <set>
+            <if test="assetsId != null">
+                assets_id = #{assetsId},
+            </if>
+            <if test="assetsName != null">
+                assets_name = #{assetsName},
+            </if>
+            <if test="assetsNo != null">
+                assets_no = #{assetsNo},
+            </if>
+            <if test="transferTime != null">
+                transfer_time = #{transferTime},
+            </if>
+            <if test="transferStaffId != null">
+                transfer_staff_id = #{transferStaffId},
+            </if>
+            <if test="transferStaffName != null">
+                transfer_staff_name = #{transferStaffName},
+            </if>
+            <if test="fromStaffId != null">
+                from_staff_id = #{fromStaffId},
+            </if>
+            <if test="fromStaffName != null">
+                from_staff_name = #{fromStaffName},
+            </if>
+            <if test="fromDepartmentId != null">
+                from_department_id = #{fromDepartmentId},
+            </if>
+            <if test="fromDepartmentName != null">
+                from_department_name = #{fromDepartmentName},
+            </if>
+            <if test="toStaffId != null">
+                to_staff_id = #{toStaffId},
+            </if>
+            <if test="toStaffName != null">
+                to_staff_name = #{toStaffName},
+            </if>
+            <if test="toDepartmentId != null">
+                to_department_id = #{toDepartmentId},
+            </if>
+            <if test="toDepartmentName != null">
+                to_department_name = #{toDepartmentName},
+            </if>
+            <if test="reason != null">
+                reason = #{reason},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="approverId != null">
+                approver_id = #{approverId},
+            </if>
+            <if test="approverName != null">
+                approver_name = #{approverName},
+            </if>
+            <if test="approveTime != null">
+                approve_time = #{approveTime},
+            </if>
+            <if test="approveComment != null">
+                approve_comment = #{approveComment},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            update_time = NOW()
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectPage" resultType="com.example.entity.AssetsTransfer">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_transfer
+        <where>
+            <if test="assetsName != null and assetsName != ''">
+                AND assets_name LIKE CONCAT('%', #{assetsName}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="transferStaffId != null">
+                AND transfer_staff_id = #{transferStaffId}
+            </if>
+            <if test="fromStaffId != null">
+                AND from_staff_id = #{fromStaffId}
+            </if>
+            <if test="toStaffId != null">
+                AND to_staff_id = #{toStaffId}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectByAssetsId" resultType="com.example.entity.AssetsTransfer">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_transfer
+        where assets_id = #{assetsId}
+        order by transfer_time desc
+    </select>
+
+</mapper> 

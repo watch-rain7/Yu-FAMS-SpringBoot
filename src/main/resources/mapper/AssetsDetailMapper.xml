@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AssetsDetailMapper">
+
+    <sql id="Base_Column_List">
+        id, assets_id, assets_name, assets_no, operation_type, operation_time, operator_id, operator_name,
+        before_status, after_status, before_staff_id, before_staff_name, after_staff_id, after_staff_name,
+        before_department_id, before_department_name, after_department_id, after_department_name,
+        before_location, after_location, description, comment, create_time
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.AssetsDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_detail
+        <where>
+            <if test="assetsName != null and assetsName != ''">
+                AND assets_name LIKE CONCAT('%', #{assetsName}, '%')
+            </if>
+            <if test="operationType != null and operationType != ''">
+                AND operation_type = #{operationType}
+            </if>
+            <if test="operatorId != null">
+                AND operator_id = #{operatorId}
+            </if>
+            <if test="assetsId != null">
+                AND assets_id = #{assetsId}
+            </if>
+        </where>
+        order by operation_time desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.AssetsDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_detail
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from assets_detail
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from assets_detail
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.AssetsDetail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO assets_detail(
+            assets_id, assets_name, assets_no, operation_type, operation_time, operator_id, operator_name,
+            before_status, after_status, before_staff_id, before_staff_name, after_staff_id, after_staff_name,
+            before_department_id, before_department_name, after_department_id, after_department_name,
+            before_location, after_location, description, comment, create_time
+        ) VALUES (
+            #{assetsId}, #{assetsName}, #{assetsNo}, #{operationType}, #{operationTime}, #{operatorId}, #{operatorName},
+            #{beforeStatus}, #{afterStatus}, #{beforeStaffId}, #{beforeStaffName}, #{afterStaffId}, #{afterStaffName},
+            #{beforeDepartmentId}, #{beforeDepartmentName}, #{afterDepartmentId}, #{afterDepartmentName},
+            #{beforeLocation}, #{afterLocation}, #{description}, #{comment}, NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.AssetsDetail">
+        update assets_detail
+        <set>
+            <if test="assetsId != null">
+                assets_id = #{assetsId},
+            </if>
+            <if test="assetsName != null">
+                assets_name = #{assetsName},
+            </if>
+            <if test="assetsNo != null">
+                assets_no = #{assetsNo},
+            </if>
+            <if test="operationType != null">
+                operation_type = #{operationType},
+            </if>
+            <if test="operationTime != null">
+                operation_time = #{operationTime},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId},
+            </if>
+            <if test="operatorName != null">
+                operator_name = #{operatorName},
+            </if>
+            <if test="beforeStatus != null">
+                before_status = #{beforeStatus},
+            </if>
+            <if test="afterStatus != null">
+                after_status = #{afterStatus},
+            </if>
+            <if test="beforeStaffId != null">
+                before_staff_id = #{beforeStaffId},
+            </if>
+            <if test="beforeStaffName != null">
+                before_staff_name = #{beforeStaffName},
+            </if>
+            <if test="afterStaffId != null">
+                after_staff_id = #{afterStaffId},
+            </if>
+            <if test="afterStaffName != null">
+                after_staff_name = #{afterStaffName},
+            </if>
+            <if test="beforeDepartmentId != null">
+                before_department_id = #{beforeDepartmentId},
+            </if>
+            <if test="beforeDepartmentName != null">
+                before_department_name = #{beforeDepartmentName},
+            </if>
+            <if test="afterDepartmentId != null">
+                after_department_id = #{afterDepartmentId},
+            </if>
+            <if test="afterDepartmentName != null">
+                after_department_name = #{afterDepartmentName},
+            </if>
+            <if test="beforeLocation != null">
+                before_location = #{beforeLocation},
+            </if>
+            <if test="afterLocation != null">
+                after_location = #{afterLocation},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectPage" resultType="com.example.entity.AssetsDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_detail
+        <where>
+            <if test="assetsName != null and assetsName != ''">
+                AND assets_name LIKE CONCAT('%', #{assetsName}, '%')
+            </if>
+            <if test="operationType != null and operationType != ''">
+                AND operation_type = #{operationType}
+            </if>
+            <if test="operatorId != null">
+                AND operator_id = #{operatorId}
+            </if>
+            <if test="assetsId != null">
+                AND assets_id = #{assetsId}
+            </if>
+        </where>
+        order by operation_time desc
+    </select>
+
+    <select id="selectByAssetsId" resultType="com.example.entity.AssetsDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_detail
+        where assets_id = #{assetsId}
+        order by operation_time desc
+    </select>
+
+    <select id="selectByAssetsIdAndType" resultType="com.example.entity.AssetsDetail">
+        select
+        <include refid="Base_Column_List"/>
+        from assets_detail
+        where assets_id = #{assetsId} and operation_type = #{operationType}
+        order by operation_time desc
+    </select>
+
+</mapper> 

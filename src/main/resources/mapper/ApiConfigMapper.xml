@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.ApiConfigMapper">
+
+    <sql id="Base_Column_List">
+        id, name, description, url, method, headers, parameters, response_format, status, type,
+        auth_type, auth_info, timeout, retry_count, creator_id, creator_name, create_time, update_time
+    </sql>
+
+    <select id="selectAll" resultType="com.example.entity.ApiConfig">
+        select
+        <include refid="Base_Column_List"/>
+        from api_config
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="method != null and method != ''">
+                AND method = #{method}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectById" resultType="com.example.entity.ApiConfig">
+        select
+        <include refid="Base_Column_List"/>
+        from api_config
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        delete from api_config
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from api_config
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.example.entity.ApiConfig" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO api_config(
+            name, description, url, method, headers, parameters, response_format, status, type,
+            auth_type, auth_info, timeout, retry_count, creator_id, creator_name, create_time, update_time
+        ) VALUES (
+            #{name}, #{description}, #{url}, #{method}, #{headers}, #{parameters}, #{responseFormat}, #{status}, #{type},
+            #{authType}, #{authInfo}, #{timeout}, #{retryCount}, #{creatorId}, #{creatorName}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.ApiConfig">
+        update api_config
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="method != null">
+                method = #{method},
+            </if>
+            <if test="headers != null">
+                headers = #{headers},
+            </if>
+            <if test="parameters != null">
+                parameters = #{parameters},
+            </if>
+            <if test="responseFormat != null">
+                response_format = #{responseFormat},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="authType != null">
+                auth_type = #{authType},
+            </if>
+            <if test="authInfo != null">
+                auth_info = #{authInfo},
+            </if>
+            <if test="timeout != null">
+                timeout = #{timeout},
+            </if>
+            <if test="retryCount != null">
+                retry_count = #{retryCount},
+            </if>
+            update_time = NOW()
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectPage" resultType="com.example.entity.ApiConfig">
+        select
+        <include refid="Base_Column_List"/>
+        from api_config
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+                AND type = #{type}
+            </if>
+            <if test="method != null and method != ''">
+                AND method = #{method}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <select id="selectByStatus" resultType="com.example.entity.ApiConfig">
+        select
+        <include refid="Base_Column_List"/>
+        from api_config
+        where status = #{status}
+        order by id desc
+    </select>
+
+    <select id="selectByType" resultType="com.example.entity.ApiConfig">
+        select
+        <include refid="Base_Column_List"/>
+        from api_config
+        where type = #{type}
+        order by id desc
+    </select>
+
+</mapper> 
