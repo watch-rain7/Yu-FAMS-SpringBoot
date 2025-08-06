@@ -171,4 +171,24 @@ java -jar target/xm-assets.jar
 
 ---
 
+## 项目持续更新中，此版本进行开源
+1. 后续版本不进行开源了，要对接企业泛微OA系统进行系统集成了。
+2. 需要和OA、ERP系统其他业务系统集成，大家可以进行自己二开。
+---
+
+## 源码地址：
+
+### 后端：
+
+GitHub地址：https://github.com/watch-rain7/Yu-FAMS-SpringBoot
+
+Gitee地址：https://gitee.com/yuzhiqi/Yu-FAMS-SpringBoot
+
+### 前端：
+
+GitHub地址：https://github.com/watch-rain7/Yu-FAMS-Vue
+
+Gitee地址：https://gitee.com/yuzhiqi/Yu-FAMS-Vue
+
 **提示**：如有任何疑问或建议，请联系作者邮箱：495944966@qq.com
+
