@@ -34,7 +34,7 @@
 
 ### 后端架构
 - **框架**：SpringBoot
-- **数据库**：MySQL（推测）
+- **数据库**：MySQL
 - **API风格**：RESTful
 
 ---
@@ -191,4 +191,5 @@ GitHub地址：https://github.com/watch-rain7/Yu-FAMS-Vue
 Gitee地址：https://gitee.com/yuzhiqi/Yu-FAMS-Vue
 
 **提示**：如有任何疑问或建议，请联系作者邮箱：495944966@qq.com
+
 
